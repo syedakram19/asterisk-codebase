@@ -1,0 +1,29 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: allow-kamailio-to-asterisk
+  namespace: default
+spec:
+  selector: app == 'kamailio'
+  ingress:
+  - action: Allow
+    source:
+      selector: app == 'asterisk'
+    destination:
+      ports:
+      - 5060
+---
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: allow-asterisk-to-mysql
+  namespace: default
+spec:
+  selector: app == 'asterisk'
+  ingress:
+  - action: Allow
+    source:
+      selector: app == 'mysql'
+    destination:
+      ports:
+      - 3306

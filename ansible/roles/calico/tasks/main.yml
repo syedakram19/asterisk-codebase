@@ -1,0 +1,4 @@
+- name: Apply Calico Network Policies
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'helm/values/calico-network-policies.yaml') }}"

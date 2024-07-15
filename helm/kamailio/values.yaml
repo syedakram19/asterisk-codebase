@@ -1,0 +1,12 @@
+replicaCount: 3
+
+image:
+  repository: kamailio/kamailio
+  tag: latest
+
+service:
+  type: ClusterIP
+  port: 5060
+
+config:
+  configMap: kamailio-config

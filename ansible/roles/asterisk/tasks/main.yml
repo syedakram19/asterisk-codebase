@@ -1,0 +1,6 @@
+- name: Deploy Asterisk using Helm
+  helm:
+    name: asterisk
+    chart: ./helm/asterisk
+    values_file: ./helm/values/asterisk-values.yaml
+    kubeconfig: "{{ lookup('env', 'KUBECONFIG') }}"

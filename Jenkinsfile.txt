@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('aws-access-key')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+        KUBECONFIG = "${env.WORKSPACE}/kubeconfig"
+    }
+
+    stages {
+        stage('Terraform Init') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+
+        stage('Configure Kubeconfig') {
+            steps {
+                script {
+                    def kubeconfig = sh(script: "terraform output -raw kubeconfig", returnStdout: true).trim()
+                    writeFile file: 'kubeconfig', text: kubeconfig
+                }
+            }
+        }
+
+        stage('Deploy Kamailio and Asterisk') {
+            steps {
+                ansiblePlaybook(
+                    playbook: 'ansible/playbooks/deploy-kamailio.yml',
+                    inventory: 'localhost,'
+                )
+                ansiblePlaybook(
+                    playbook: 'ansible/playbooks/deploy-asterisk.yml',
+                    inventory: 'localhost,'
+                )
+            }
+        }
+
+        stage('Apply Calico Network Policies') {
+            steps {
+                ansiblePlaybook(
+                    playbook: 'ansible/playbooks/apply-calico-network-policies.yml',
+                    inventory: 'localhost,'
+                )
+            }
+        }
+    }
+}

@@ -1,0 +1,6 @@
+- name: Deploy Kamailio
+  hosts: localhost
+  tasks:
+    - name: Deploy Kamailio using Helm
+      include_role:
+        name: kamailio

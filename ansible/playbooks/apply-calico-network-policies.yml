@@ -1,0 +1,6 @@
+- name: Apply Calico Network Policies
+  hosts: localhost
+  tasks:
+    - name: Apply Calico Network Policies
+      include_role:
+        name: calico

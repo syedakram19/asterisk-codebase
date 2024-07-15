@@ -1,0 +1,9 @@
+replicaCount: 2
+
+image:
+  repository: asterisk/asterisk
+  tag: latest
+
+service:
+  type: ClusterIP
+  port: 5060

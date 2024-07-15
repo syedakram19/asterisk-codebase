@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kamailio
+  labels:
+    app: kamailio
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: kamailio
+  template:
+    metadata:
+      labels:
+        app: kamailio
+    spec:
+      containers:
+      - name: kamailio
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        ports:
+        - containerPort: 5060
+        volumeMounts:
+        - name: kamailio-config
+          mountPath: /etc/kamailio/kamailio.cfg
+          subPath: kamailio.cfg
+      volumes:
+      - name: kamailio-config
+        configMap:
+          name: {{ .Values.config.configMap }}

@@ -1,0 +1,6 @@
+- name: Deploy Asterisk
+  hosts: localhost
+  tasks:
+    - name: Deploy Asterisk using Helm
+      include_role:
+        name: asterisk

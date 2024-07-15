@@ -1,0 +1,11 @@
+- name: Create ConfigMap for Kamailio
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'helm/kamailio/templates/configmap.yaml') }}"
+
+- name: Deploy Kamailio using Helm
+  helm:
+    name: kamailio
+    chart: ./helm/kamailio
+    values_file: ./helm/values/kamailio-values.yaml
+    kubeconfig: "{{ lookup('env', 'KUBECONFIG') }}"
